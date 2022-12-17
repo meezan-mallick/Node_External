@@ -43,4 +43,30 @@ router.post("/signup", async(req, res) => {
 });
 
 
+router.post("/signin", async(req, res) => {
+  const user = req.body
+
+  if(!user.email && !user.password){
+    return res.status(201).json({data : "Field cant be empty"});
+  }
+
+  // check if email and phone already exists
+  const EmailAlreadyExists = await userModel.findOne({email:user.email})
+
+  if(EmailAlreadyExists ){
+    bcrypt.compare(user.password, EmailAlreadyExists.password).then(function (result){
+      if(result == true){
+        var token = jwt.sign({ _id: EmailAlreadyExists._id}, 'login-token');
+        return res.status(200).json({data : "LOGIN SUCCESS",token})
+      }
+      else{
+        return res.status(400).json({data:"please enter correct email/password"});
+      }
+    })
+  }
+  else{
+    return res.status(400).json({data:"please sign up"})
+  }
+});
+
 module.exports = router;

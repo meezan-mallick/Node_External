@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 
 const router = require("./routes/userRoutes");
+const postrouter = require("./routes/postRoutes");
 
 const app = express();
 app.use(express.json());
@@ -10,6 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/user", router);
+app.use("/posts", postrouter);
 
 //DATA_BASE COLLECTION
 mongoose.connect("mongodb://127.0.0.1:27017/mydb");
